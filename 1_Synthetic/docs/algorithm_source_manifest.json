@@ -1,0 +1,23 @@
+{
+  "bundle": "FisherBalancing_Gaussian_Bernoulli_paper_bundle_20261005",
+  "archive_sha256": "72fce2709172eb8ee92636b51fe9c70169957df9e39aa52d0ff471846b5ebe57",
+  "source_files": {
+    "selectors.py": {
+      "source": "EmpiricalExperiment/FisherBalancing_Gaussian_Bernoulli_paper_bundle_20261005/source/real_response/selectors.py",
+      "sha256": "0f5fc8d52f0236b976ed814612267c89152b75b7b0358dbff120b3575be164e6"
+    },
+    "family_selectors.py": {
+      "source": "EmpiricalExperiment/FisherBalancing_Gaussian_Bernoulli_paper_bundle_20261005/source/real_response/family_selectors.py",
+      "sha256": "d898cb09764b8348c53fce84cace70d5c79efed0a360cf3a3c6b102e782ef072"
+    },
+    "numerics.py": {
+      "source": "EmpiricalExperiment/FisherBalancing_Gaussian_Bernoulli_paper_bundle_20261005/source/real_response/numerics.py",
+      "sha256": "ac05117b063de432a8b70326033885b6c27067a4767a50c909379a64b7687819"
+    },
+    "audit_replay.py": {
+      "source": "EmpiricalExperiment/FisherBalancing_Gaussian_Bernoulli_paper_bundle_20261005/source/real_response/audit_replay.py",
+      "sha256": "907303668262b1f217c3ebe0fb2cf2db5d5537ad28608e88bd135d0117efe7df"
+    }
+  },
+  "spec_sha256": "82d2f337caee8944d1d7c7febda4918cf232833a34de9c2b231e19b03651fb5a"
+}

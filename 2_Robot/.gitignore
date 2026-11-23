@@ -1,0 +1,45 @@
+# Local Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Full experiment artifacts stay on the original machine.
+/metaworld_fast/outputs/
+/metaworld_fast/engineering/
+/metaworld_fast/CURRENT_RUN.txt
+/metaworld_fast/ELLIPSOID_CURRENT_RUN.txt
+/exports/
+
+# Keep only the compact figure dataset and plotting code in Git.
+/results/runs/
+/results/figure_editing/figures/
+/results/figure_editing/robot_previews/
+/results/figure_editing/data/*
+!/results/figure_editing/data/curves.csv.gz
+
+# Regenerated figure exports
+/results/figure_editing/edited_figures/
+/results/figure_editing/edited_with_sg/
+
+# Machine-specific settings and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
+*.pid
+*.lock

@@ -1,0 +1,38 @@
+그림 재생성용 코드와 정리된 데이터
+
+data/curves.csv.gz는 기존 24종 figure를 그릴 때 쓴 개별 곡선 CSV입니다.
+65,790행, 7개 setting, interaction ID 0~9를 포함합니다.
+원래 CSV를 값 변경·반올림 없이 gzip으로 압축했으며 약 2.7 MiB입니다.
+plot_figures.py가 압축을 직접 읽으므로 별도로 풀 필요 없습니다.
+
+실행:
+  pip install -r requirements.txt
+  python plot_figures.py --list
+  python plot_figures.py --only m2_addon_risk_all --formats svg pdf
+  python plot_figures.py --only "m_sweep_*" --formats png
+  python plot_figures.py
+
+기본 출력 폴더는 edited_figures/입니다. 마지막 명령은 24종의 PDF와 SVG를
+생성합니다. 생성된 그림은 Git에서 제외합니다. style.json에서 색상, 라벨,
+글자 크기, 그림 크기, 개별 곡선 표시 여부와 축 범위를 수정할 수 있습니다.
+figure_index.csv는 생성 가능한 그림의 이름과 metric 목록입니다.
+
+10개 interaction의 산술평균이 굵은 선, 개별 interaction이 얇은 선입니다.
+빈 셀은 해당 그림에서 사용하지 않는 지표/시점입니다. 0으로 바꾸지 마세요.
+CSV에는 원래 SG 제거 그림의 축 범위를 재현하기 위한 SG 값도 남겼습니다.
+  python plot_figures.py --only "m_sweep_*" --only "beta_sweep_*" --include-sg
+
+주요 열:
+  eta_ellipsoid_approx = 실제 질문 EIG / ellipsoid에서 달성한 수치 EIG
+  risk = posterior covariance trace (t=0~128)
+  error = parameter squared error (t=0~128, M=2 추가 비교)
+  relative_global_gap = (analytic upper - achieved EIG) / upper
+  eta_grid_original = 과거 7-grid 기준 비율
+  eta_lower_plugin, eta_upper_plugin = M=2 bounds 그림의 아래/위 경계
+
+Exact global optimum 인증값은 아니며 기존 posterior 수치 정확도 한계가
+남아 있습니다. PS·GC·GCQ-1/3/5는 M=2 후속 검증에서 수치 정확도 기준
+미달로 기록되었습니다. 정리 과정에서 원래 결과값을 바꾸지 않았습니다.
+
+완성된 PDF/PNG, 로봇 preview, 상세 run 데이터, checkpoint, rollout은
+Git에 포함하지 않습니다. 기존 로컬 파일은 그대로 보존했습니다.

@@ -1,0 +1,151 @@
+experiment:
+  name: rcmlq_metaworld_realization_t128_s5
+  dimension: 4
+  answers_per_run: 128
+  interaction_ids: [0, 1, 2, 3, 4]
+  root_seed: 20261004
+  methods: [RC, PQ, QI, PS, GC, SG]
+  prior: uniform_hypercube
+  prior_low: -1.0
+  prior_high: 1.0
+  oracle: ideal_point_squared_distance_mnl
+  inference_beta_matches_oracle: true
+  theta_shared_across_methods: true
+  theta_shared_across_settings: false
+  settings:
+    - {id: m02_b04, choices: 2, beta: 4.0}
+    - {id: m04_b04, choices: 4, beta: 4.0}
+    - {id: m08_b04, choices: 8, beta: 4.0}
+    - {id: m16_b04, choices: 16, beta: 4.0}
+    - {id: m04_b02, choices: 4, beta: 2.0}
+    - {id: m04_b08, choices: 4, beta: 8.0}
+    - {id: m04_b16, choices: 4, beta: 16.0}
+
+queries:
+  scale_grid: [0.125, 0.2, 0.32, 0.5, 0.8, 1.25, 2.0]
+  gaussian_cap_radius: 32.0
+  gaussian_cap_center: current_posterior_mean
+  clip_to_prior_domain: false
+  rc_project_selected_query: false
+  fisher_reference: projected_median_center
+  scale_tie_rule: smallest_maximizer
+  direction_tie_rule: smallest_coordinate_top_eigenspace_projection
+  qi_inner_transformations: 1
+  ps_with_replacement: true
+  gc_covariance_multiplier: 1.0
+  sg_stage_length_parameter: 128
+  sg_stage_formula: floor_log2_one_plus_t_over_128
+  sg_std_formula: two_to_negative_stage
+  sg_center: posterior_mean_saved_at_stage_entry
+
+inference:
+  reference_dtype: float64
+  allow_unvalidated_mixed_precision: false
+  marginal_methods: [RC, PQ, QI]
+  joint_methods: [PS, GC, SG]
+  marginal_initial_nodes: 257
+  marginal_refinement_nodes: 513
+  marginal_adaptive_mesh: true
+  marginal_replay_history_on_remesh: true
+  smc_particles: 4096
+  smc_reference_particles: 8192
+  smc_tempering_ess_fraction: 0.8
+  smc_final_resampling_ess_fraction: 0.5
+  smc_metropolis_sweeps_per_resampling: 10
+  smc_exact_full_history_target: true
+  smc_delayed_acceptance_exact_correction: true
+  reject_particles_outside_prior: true
+
+measurements:
+  primary: [realized_information_ratio, posterior_covariance_trace]
+  save_realized_parameter_squared_error: true
+  eig_evaluator: integrated_posterior_kl
+  eig_reference: same_method_same_posterior_seven_scale_max
+  clip_information_ratio_at_one: false
+  add_denominator_floor: false
+  record_all_preanswer_rounds: true
+  record_risk_at_final_posterior: true
+  random_query_diagnostic_methods: [PS, GC, SG]
+  random_query_diagnostic_t: [0, 31, 63, 95, 127]
+  random_query_diagnostic_draws: 64
+
+robot_audit:
+  enabled: true
+  interpretation: coordinate_model_with_simulator_realization_audit
+  environment: reach-v3
+  environment_api: inspect_installed_official_metaworld
+  clip_action_steps: 50
+  terminate_on_success: false
+  context_shared_across_methods_and_settings: true
+  context_count: 5
+  use_scripted_expert_for_nominal_only: true
+  train_rl_policy: false
+  nearest_neighbor_retrieval: false
+  per_query_trajectory_optimization: false
+  adapter: four_cartesian_temporal_bases_gripper_fixed
+  basis: [sin_pi_x, sin_pi_y, sin_pi_z, sin_2pi_x]
+  baseline_cartesian_action_scale: 0.6
+  conservative_query_coordinate_bound: 33.0
+  perturbation_component_budget: 0.35
+  global_gain_formula: perturbation_budget_divided_by_q_bound_and_max_basis_row_l1
+  per_query_rescaling: false
+  allow_silent_action_clipping: false
+  reconstruct_query_from_submitted_actions: true
+  initial_command_reconstruction_tolerance: 0.0001
+  audit_executed_motion_rank: true
+  audit_workspace_saturation: true
+  pixel_rendering_in_hot_path: false
+  selected_query_rollout_coverage: all
+  asynchronous_replay: true
+  reference_rollout_audit_interaction_ids: [0]
+  reference_rollout_audit_t: [0, 127]
+  replay_all_random_diagnostic_queries: false
+
+validation:
+  marginal_relative_variance_eig_tolerance: 0.005
+  absolute_information_ratio_tolerance: 0.005
+  frozen_history_posterior_check_answer_counts: [0, 32, 64, 128]
+  small_case_dimension: 2
+  small_case_answers: 32
+  small_case_choices: [2, 3, 4]
+  independent_reference_replays: true
+  refine_unresolved_references: true
+  report_integration_error_separately: true
+
+resources:
+  detect_actual_hardware: true
+  optimize_for: validated_end_to_end_wall_time
+  gpu_processes: 1
+  gpu_batch_size: auto_profile
+  gpu_memory_reserve_fraction: 0.15
+  cpu_rollout_workers: auto_profile
+  cpu_worker_candidates: [4, 8, 12, 16, 20, 24]
+  rollout_worker_blas_threads: 1
+  rollout_chunk_candidates: auto_profile
+  worker_reuse: true
+  import_cuda_in_rollout_workers: false
+  multiprocessing_start_method: spawn
+  reuse_compatible_statistical_prefixes: true
+  exact_rollout_cache: true
+  approximate_query_cache: false
+  overwrite_unrelated_outputs: false
+  reduce_statistical_budget_on_oom: false
+
+output:
+  root: metaworld_fast/outputs
+  checkpoint_every_answers: 16
+  atomic_writes: true
+  resume: true
+  save_full_query_answer_history: true
+  save_particle_checkpoints: true
+  save_executed_end_effector_series: true
+  save_all_pixels: false
+  confidence_display: individual_five_interactions_and_mean
+  automatic_p_values: false
+  automatic_bootstrap_95ci: false
+  stop_or_expand_based_on_method_rankings: false
+  qualitative_setting: m04_b04
+  qualitative_interaction_ids: [0]
+  qualitative_methods: [RC, PQ, SG]
+  qualitative_t: [0, 63, 127]
+  plot_formats: [pdf, png]

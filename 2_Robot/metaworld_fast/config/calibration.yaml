@@ -1,0 +1,7 @@
+worker_candidates: [4, 8, 12, 16, 20, 24]
+rollout_candidates_per_worker: 8
+chunk_candidates: [32, 64, 128]
+statistical_profile_settings: [m16_b04, m04_b16]
+statistical_profile_methods: [RC, QI, SG]
+answers_per_profile: 128
+profile_seeds_disjoint_from_final: true

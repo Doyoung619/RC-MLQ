@@ -1,0 +1,47 @@
+{
+  "description": "Only the curated data used to draw 24 figures; lossless gzip of the original CSV.",
+  "path": "results/figure_editing/data/curves.csv.gz",
+  "bytes": 2818011,
+  "sha256": "4903126659803da2e8611f207ab0862854c87ad18dc0eaaad8b8edcb5c2f3ee8",
+  "source": "exports/ellipsoid_figures_editable_light_20261006/data/curves.csv",
+  "uncompressed_bytes": 7729103,
+  "uncompressed_sha256": "6e047fd3ac8d61145ffb084c5106e0aa7af545d5701d473d9f7d923c32f94619",
+  "rows": 65790,
+  "columns": [
+    "setting",
+    "M",
+    "beta",
+    "method",
+    "interaction_id",
+    "t",
+    "eta_ellipsoid_approx",
+    "risk",
+    "error",
+    "relative_global_gap",
+    "eta_grid_original",
+    "eta_lower_plugin",
+    "eta_upper_plugin"
+  ],
+  "settings": [
+    "m02_b04",
+    "m04_b02",
+    "m04_b04",
+    "m04_b08",
+    "m04_b16",
+    "m08_b04",
+    "m16_b04"
+  ],
+  "interaction_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "figure_count": 24
+}

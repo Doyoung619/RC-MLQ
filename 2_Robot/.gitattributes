@@ -1,0 +1,5 @@
+# Preserve original source and artifact bytes for recorded SHA-256 checks.
+* -text
+
+# Python's CSV writer uses CRLF, which is part of the original artifact.
+*.csv whitespace=cr-at-eol

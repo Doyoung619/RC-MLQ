@@ -1,0 +1,46 @@
+# 24 tiny jobs: all 12 eligible algorithms in each family, two batches.
+experiment_name: smoke_algorithm_suite
+algorithm_suite: spec_v1
+source: synthetic
+output_root: results_spec
+cache_root: data/openml_cache
+seeds:
+- 0
+datasets:
+- name: anisotropic_ball
+  dimension: 3
+  representation_dimension: 3
+  n_candidates: 100
+  radius: 1.0
+  anisotropy: 1.5
+  weak_fraction: 0.1
+  weak_rank: 1
+  theta_regime: weak
+  signal_std: 0.8
+  theta_norm_cap: 8.0
+  with_replacement: false
+  max_common_randomness: 100000
+models:
+- family: gaussian
+  noise_std: 1.0
+- family: logistic
+protocols:
+- name: batch
+  n_init: 12
+  initialization: spec_shared_d_opt
+  budget_by_family:
+    gaussian: 40
+    bernoulli: 80
+  batch_size: 4
+  budget: 8
+  candidate_limit: 24
+estimator:
+  ridge: 1.0
+  max_iter: 50
+  tolerance: 1.0e-08
+metrics:
+  names:
+  - l2_error
+  - lambda_min
+  - plugin_lambda_min
+  - squared_error

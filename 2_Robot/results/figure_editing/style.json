@@ -1,0 +1,72 @@
+{
+  "font_size": 10,
+  "font_family": "DejaVu Sans",
+  "svg_fonttype": "none",
+  "pdf_fonttype": 42,
+  "dpi": 180,
+  "show_individuals": true,
+  "individual_alpha_original": 0.2,
+  "individual_alpha_addon": 0.12,
+  "individual_alpha_addon_sweep": 0.15,
+  "individual_width_original": 0.5,
+  "individual_width_addon": 0.55,
+  "mean_width_original": 1.8,
+  "mean_width_addon": 2.0,
+  "mean_width_addon_sweep": 1.6,
+  "bounds_width": 1.6,
+  "bounds_alpha": 0.07,
+  "figure_size_original": [
+    16,
+    4.8
+  ],
+  "figure_size_addon": [
+    12,
+    6.6
+  ],
+  "figure_size_addon_sweep": [
+    18,
+    6
+  ],
+  "axis_limits": {},
+  "labels": {
+    "RC": "RC",
+    "PQ": "PQ",
+    "QI": "QI-1",
+    "PS": "PS",
+    "GC": "GC",
+    "sm_continuous": "SM",
+    "mem_line": "MEM-line",
+    "gmem_line": "GMEM-line",
+    "2mem_line_2sweeps": "2MEM-line (2 sweeps)",
+    "infosynth_trace": "IT",
+    "infosynth_bounded": "IB",
+    "gausscloud_paper_L1": "GCQ-1",
+    "gausscloud_paper_L3": "GCQ-3",
+    "gausscloud_paper_L5": "GCQ-5"
+  },
+  "colors": {
+    "RC": "#0072B2",
+    "PQ": "#D55E00",
+    "QI": "#009E73",
+    "PS": "#CC79A7",
+    "GC": "#E69F00",
+    "sm_continuous": "#542788",
+    "mem_line": "#1b7837",
+    "gmem_line": "#a6611a",
+    "2mem_line_2sweeps": "#d73027",
+    "infosynth_trace": "#008B8B",
+    "infosynth_bounded": "#e7298a",
+    "gausscloud_paper_L1": "#4d4d4d",
+    "gausscloud_paper_L3": "#756bb1",
+    "gausscloud_paper_L5": "#2166ac"
+  },
+  "original_labels": {
+    "RC": "RC",
+    "PQ": "PQ",
+    "QI": "QI",
+    "PS": "PS",
+    "GC": "GC",
+    "SG": "SG"
+  },
+  "sg_color": "#555555"
+}
