@@ -23,6 +23,22 @@ python smoke.py --run-dir metaworld_fast/outputs/smoke --seed 20261004
 
 This runs one RC interaction with two answers and replays all eight displayed candidates. It saves inference arrays in the run directory's `statistical/` folder and motion diagnostics in `smoke.json`. Change the seed and use a new run directory for a fresh interaction.
 
+## Run the compact E01 scale ablation
+
+The follow-up holds the main setting fixed at four candidates, four preference dimensions and `beta=4`. Each method uses the same ten latent-preference and robot context seeds for 128 answers. RC-Fisher and Direct EIG select from the original seven scales. The comparison includes PQ and three prespecified fixed scales (0.125, 0.5 and 2.0).
+
+From this directory, with the environment installed:
+
+```bash
+.venv/bin/python robot_e01.py plan --ellipsoid
+bash run_e01_detached.sh metaworld_fast/outputs/robot_e01 --ellipsoid
+.venv/bin/python robot_e01.py status --run-dir metaworld_fast/outputs/robot_e01
+```
+
+This schedules 60 statistical interactions and 30,720 selected candidate slots for the reach-v3 motion audit. Choices depend on the saved preference coordinates. The existing open-loop adapter maps those coordinates to MuJoCo motions, as it does in the [Robot implementation](metaworld_fast/PROVENANCE.md). Omitting `--ellipsoid` produces the same inference and motion audit with the seven-scale information ratio. With `--ellipsoid`, the separate numerical ellipsoid search evaluates the saved pre-answer histories at rounds 0, 64 and 127 using the existing search budget and geometry. Its achieved reference is approximate.
+
+The run directory contains `summary.json` with paired endpoint differences and measured stage times, per-round histories in `statistical/`, simulator diagnostics in `rollouts/`, and the optional checkpoint search in `ellipsoid/`. The distinct metrics are posterior MSE (covariance trace) and squared error against the simulated latent preference. With at least two interactions, each paired difference includes a 95% percentile interval from 2,000 shared resamples of the interaction IDs. Treat intervals from the ten-interaction panel as exploratory. Stage wall times cover the latest invocation, and worker times cover all retained shards. The detached launcher writes to `logs/supervisor.log` and records the exit status in `exit_code`. Rerun with the same directory and arguments to resume at the next unfinished interaction or replay shard. Use a fresh directory with `--interactions 1 --answers 2` for a smoke run.
+
 ## Run the five-interaction benchmark
 
 ```bash

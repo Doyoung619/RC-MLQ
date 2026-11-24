@@ -1,0 +1,17 @@
+root_seed: 20261001
+answers: 4096
+interactions: 8
+dimensions: [2, 4, 8, 16]
+choices: [2, 4, 8, 16]
+beta: 4
+extra_settings:
+  - {d: 8, M: 4, beta: 2}
+  - {d: 8, M: 4, beta: 8}
+  - {d: 8, M: 4, beta: 16}
+methods: [RC, PQ, QI, PS, GC]
+binary_methods: [SG, SM, MEM, GM, 2M, IT, IB]
+nodes: 257
+particles: 4096
+checkpoint_every: 128
+bootstrap: 2000
+diagnostic_rounds: [0, 127, 511, 2047, 4096]

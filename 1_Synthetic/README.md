@@ -1,44 +1,69 @@
-# Synthetic GLM-Score experiments
+# Synthetic RC-MLQ experiments
 
-Generate a seeded anisotropic candidate pool and Gaussian or Bernoulli responses, then compare batch acquisition methods for GLM parameter estimation. Ours is `fb_opt2` (Fisher Balancing). A batch is selected using the current fit, then its responses are revealed and the ridge GLM is refit.
+This experiment simulates multiway choices around a latent ideal point drawn
+uniformly from `[-1, 1]^d`. Each method proposes its own slate, receives one
+squared-distance multinomial-logit response, and updates its own posterior.
+Methods share a latent ideal point within each matched interaction and use
+separate answer streams. RC, PQ, and QI use marginal quadrature. PS and GC use
+tempered joint SMC.
 
-## Quick start
+The code reconstructs the manuscript protocol and reuses the numerical model
+and posterior engines in `../2_Robot/metaworld_fast`. Run it from a full checkout
+of this repository. Synthetic runs use CPU inference and require no simulator.
 
-Run from this directory with Python 3.10 or newer. Python 3.11 is a good starting point for a new environment.
+## Setup and smoke run
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install -e ".[dev]"
+From `1_Synthetic` with Python 3.11 on Linux:
 
-python -m pscore_harness plan --config configs/smoke.yaml
-python -m pscore_harness run --config configs/smoke.yaml --workers 1 --fail-fast
-python -m pscore_harness validate --config configs/smoke.yaml
-python -m pytest -q
+```sh
+python3.11 -m venv .venv
+.venv/bin/python -m pip install -e '.[dev]'
+.venv/bin/python -m rcmlq_synthetic plan --config configs/smoke.yaml
+.venv/bin/python -m rcmlq_synthetic run --config configs/smoke.yaml --run-dir outputs/smoke --workers 1
+.venv/bin/python -m rcmlq_synthetic report --config configs/smoke.yaml --run-dir outputs/smoke
+.venv/bin/python -m pytest -q
 ```
 
-In Windows PowerShell, activate the environment with `.\.venv\Scripts\Activate.ps1`. If the checkout path is already long, set a short absolute `output_root` in the YAML.
+## Experiment settings
 
-The smoke config runs two batches for all 12 eligible methods in each family (24 jobs). A run writes `trajectory.csv`, `theta_star.npy`, the selected row IDs, and per-batch checkpoints under `results_spec/<experiment_name>/<run_id>/`. The trajectory includes parameter error and the smallest eigenvalues of the true and plug-in Fisher matrices.
+| Configuration | Purpose |
+| --- | --- |
+| `configs/paper_main.yaml` | Main four-way experiment with \(d=M=4\), \(\beta=4\), eight interactions and 4,096 answers per method |
+| `configs/paper_sweeps.yaml` | Dimension and choice-count grid, response-sensitivity sweep, and binary baselines |
+| `configs/e01.yaml` | Matched comparison of Fisher selection, direct grid EIG, fixed scales and original controls |
+| `configs/e02.yaml` | One-factor sensitivity to scale-grid resolution and range |
 
-## Run with new data
+Inspect the resolved job list with `plan` before starting a campaign.
+Use a new run directory for a different configuration or seed. On Linux,
+the detached launcher uses the project Python and writes `launcher.log` and
+`launcher.exit` to the run directory. Reuse the same settings and run directory
+to resume.
 
-Copy one of the YAML settings and change `seeds`. A new seed generates a new pool, target and response randomness. Methods within the same condition and seed share these inputs. The default `theta_regime: weak` places the target along the weakest direction of the generated pool. Set `theta_regime: random` to draw its direction randomly.
-
-- [Smoke](configs/smoke.yaml) runs 24 jobs.
-- [Pilot](configs/synthetic_pilot.yaml) runs 72 jobs.
-- [Main](configs/synthetic_main.yaml) runs 2,160 jobs across dimensions, batch sizes, families and seeds.
-
-Each run keeps one candidate pool. At each batch it selects distinct previously unobserved rows from that pool. The settings here describe a fixed-pool synthetic experiment. For a custom comparison, add a top-level `methods: [{name: fb_opt2}, {name: random}]` to the copied YAML.
-
-Use the same YAML and output directory to resume a run. Use a distinct `experiment_name` to keep a custom campaign's results and reporting separate.
-
-## Generate figures and tables
-
-After completing the smoke config, run the following from this directory.
-
-```bash
-python -m pscore_harness report --results-root results_spec/smoke_algorithm_suite --paper-dir reports/smoke --require-config configs/smoke.yaml
+```sh
+./scripts/run_detached.sh configs/paper_main.yaml outputs/paper-main 4
 ```
 
-The report writes four-panel figures, aggregate and endpoint tables, and seed diagnostics to `reports/smoke/generated/algorithm_suite/`. For other campaigns, update the results directory and config path together. See the [algorithm guide](docs/ALGORITHM_SUITE_KO.md) for acquisition, response generation and checkpoint details.
+## Interpreting the outputs
+
+Each interaction stores its simulated questions and responses, posterior
+moments, selected EIG and grid-reference EIG with its seeds and configuration.
+Risk is the posterior covariance trace. Realized squared error uses the
+simulated latent preference. The final query is evaluated after the last
+response and receives no answer. The report writes `curves.csv`,
+`paired_vs_rc.csv`, and `missing_jobs.csv`. Interval estimates resample whole
+interactions and share indices across methods and rounds.
+
+The optional ellipsoid stage replays those saved histories and records a
+separate approximate ratio using a finite search over candidate coordinates.
+Install CPU PyTorch for this stage. By default it checks early, middle, and
+terminal states. Pass `--all-rounds` for a full reference curve or `--rounds`
+to preselect checkpoints.
+
+```sh
+.venv/bin/python -m pip install --index-url https://download.pytorch.org/whl/cpu 'torch==2.5.1'
+.venv/bin/python -m rcmlq_synthetic reference --config configs/smoke.yaml --run-dir outputs/smoke
+```
+
+The reconstruction has its own seeds and numerical provenance. It generates
+new trajectories and preserves the original seven-scale grid for the
+grid-reference diagnostic across the E02 sensitivity groups.

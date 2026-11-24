@@ -1,15 +1,15 @@
 # RC-MLQ experiments
 
-This repository contains two independent experiments. Clone it and follow the setup in the experiment directory you want to run.
-
-```bash
-git clone https://github.com/Doyoung619/RC-MLQ.git
-cd RC-MLQ
-```
+This repository contains two experiment entry points for Resolution-Calibrated
+Multiway Line Queries (RC-MLQ).
 
 | Directory | Experiment | First run |
 | --- | --- | --- |
-| [1_Synthetic](1_Synthetic/) | GLM-Score with generated Gaussian and Bernoulli responses | Run the two-batch smoke configuration on a CPU |
-| [2_Robot](2_Robot/) | RC-MLQ preference learning with a Meta-World reach-v3 motion audit | Run one interaction and replay its candidates in MuJoCo on Linux |
+| [1_Synthetic](1_Synthetic/) | Synthetic ideal-point preference learning with simulated multiway choices | Run the CPU smoke configuration |
+| [2_Robot](2_Robot/) | Preference learning with a Meta-World reach-v3 motion audit | Run one interaction and replay its candidates in MuJoCo |
 
-Each guide includes installation, run commands, and the location of generated results. You can change the seed to generate a new experiment.
+Clone the full repository so the Synthetic entry point can use the numerical
+model and posterior implementations in `2_Robot/metaworld_fast`. Each guide
+describes setup, experiment settings, and generated artifacts. The Synthetic
+implementation was reconstructed from the manuscript's protocol. Its new runs
+have their own provenance.

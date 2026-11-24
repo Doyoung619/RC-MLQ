@@ -1,0 +1,12 @@
+root_seed: 20261001
+answers: 4096
+interactions: 8
+dimensions: [4]
+choices: [4]
+beta: 4
+methods: [RC, PQ, QI, PS, GC]
+nodes: 257
+particles: 4096
+checkpoint_every: 128
+bootstrap: 2000
+diagnostic_rounds: [0, 127, 511, 2047, 4096]
